@@ -172,6 +172,7 @@
     <div class="quiz-info">
         <h1>Select Your Quiz</h1>
         <select id="quizSelector" onchange="fetchQuizData(this.value)">
+            <option value="" disabled selected>Select a quiz</option>
             <option value="1">Quiz 1</option>
             <option value="2">Quiz 2</option>
             <option value="3">Quiz 3</option>
@@ -199,7 +200,7 @@
     // Disable all keyboard inputs
     function disableKeys() {
         document.addEventListener('keydown', function(event) {
-            // Disable Escape key, function keys, and Ctrl, Alt, Windows keys
+            // Prevent Escape key, function keys, and Ctrl, Alt, Windows keys from working
             if (event.key === 'Escape' || event.key.startsWith('F') || event.ctrlKey || event.altKey || event.metaKey) {
                 event.preventDefault();
             }
@@ -226,20 +227,33 @@
     function fetchQuizData(quizId) {
         const quizURL = `quiz${quizId}.json`;
         fetch(quizURL)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 sessionStorage.setItem('quizData', JSON.stringify(data));
                 quizData = data;
                 console.log('Quiz data stored in session storage');
+                displayQuiz(); // Call displayQuiz when data is fetched successfully
             })
-            .catch(error => console.error('Error fetching quiz data:', error));
+            .catch(error => {
+                console.error('Error fetching quiz data:', error);
+                alert('Error loading quiz data. Please try again.');
+            });
     }
 
     function startQuiz() {
+        if (!quizData) {
+            alert('Please select a quiz first!');
+            return;
+        }
+        
         document.getElementById('quizControls').style.display = 'none';
         document.getElementById('quizSection').style.display = 'block';
         openFullscreen();
-        displayQuiz();
         startCountdown();
         quizStarted = true;
 
@@ -265,57 +279,58 @@
     }
 
     function displayQuiz() {
-        const quizData = JSON.parse(sessionStorage.getItem('quizData')) || {};
         const questionsContainer = document.getElementById('questionsContainer');
-        let quizHTML = '';
+        questionsContainer.innerHTML = ''; // Clear previous questions
 
+        let questionIndex = 0;
         for (const topic in quizData) {
-            quizHTML += `<h2>${topic}</h2>`;
-            quizData[topic].forEach((questionObj, index) => {
-                quizHTML += `
-                    <div class="question">
-                        <div class="question-text">${questionObj.question}</div>
-                        ${questionObj.options.map((option, i) => `
-                            <div class="options">
-                                <input type="radio" name="question${index}" value="${option}" id="option${index}${i}">
-                                <label for="option${index}${i}">${option}</label>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
+            quizData[topic].forEach((questionObj) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `<p>${questionIndex + 1}. ${questionObj.question}</p>`;
+                questionObj.options.forEach(option => {
+                    questionDiv.innerHTML += `
+                        <div class="options">
+                            <input type="radio" name="question${questionIndex}" value="${option}">${option}
+                        </div>
+                    `;
+                });
+                questionsContainer.appendChild(questionDiv);
+                questionIndex++;
             });
         }
-
-        questionsContainer.innerHTML = quizHTML;
     }
 
     function submitQuiz() {
         clearInterval(countdownInterval);
         let score = 0;
-        let totalQuestions = 0;
-        const quizData = JSON.parse(sessionStorage.getItem('quizData'));
+        const totalQuestions = quizData.length; // Update based on your data structure
+        const questionsContainer = document.getElementById('questionsContainer');
 
-        for (const topic in quizData) {
-            quizData[topic].forEach((questionObj, index) => {
-                totalQuestions++;
-                const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
-                if (selectedOption && selectedOption.value === questionObj.correctAnswer) {
+        quizData.forEach((topic, topicIndex) => {
+            topic.forEach((questionObj, questionIndex) => {
+                const selectedOption = questionsContainer.querySelector(`input[name="question${questionIndex}"]:checked`);
+                if (selectedOption && selectedOption.value === questionObj.answer) {
                     score++;
                 }
             });
-        }
+        });
 
-        document.getElementById('quizSection').style.display = 'none';
+        // Display results
         const resultDiv = document.createElement('div');
         resultDiv.className = 'result';
         resultDiv.innerHTML = `<h2>Your Score: ${score} / ${totalQuestions}</h2>`;
-        document.getElementById('quizContainer').appendChild(resultDiv);
+        questionsContainer.innerHTML = ''; // Clear questions
+        questionsContainer.appendChild(resultDiv);
 
-        const backBtn = document.createElement('button');
-        backBtn.className = 'btn back-btn';
-        backBtn.innerText = 'Back to Courses';
-        backBtn.onclick = () => window.location.href = 'Courses.html';
-        resultDiv.appendChild(backBtn);
+        // Add Back to Courses button
+        const backButton = document.createElement('button');
+        backButton.innerText = 'Back to Courses';
+        backButton.className = 'btn back-btn';
+        backButton.onclick = function() {
+            window.location.href = 'courses.html'; // Redirect back to courses
+        };
+        questionsContainer.appendChild(backButton);
     }
 
     function openFullscreen() {
