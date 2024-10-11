@@ -5,28 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz - Courses</title>
     <style>
+        /* Styles for a better exam environment */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #222;
-            color: #fff;
+            background-color: #1E1E1E;
+            color: #FFF;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
         }
         .light-theme {
-            background-color: #fff;
+            background-color: #FFF;
             color: #000;
         }
         .quiz-container {
             max-width: 700px;
-            margin: 20px auto;
-            background-color: #333;
+            width: 100%;
+            background-color: #2C2C2C;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+            transition: all 0.3s ease;
+            border: 1px solid #4CAF50;
         }
         .light-theme .quiz-container {
-            background-color: #f4f4f4;
+            background-color: #F0F0F0;
             color: #000;
+            border: 1px solid #4CAF50;
         }
         .controls {
             text-align: center;
@@ -37,22 +47,41 @@
             color: white;
             padding: 10px 15px;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
             margin: 5px;
+            transition: background-color 0.3s;
         }
         .btn:hover {
             background-color: #45a049;
         }
         .question {
             margin: 20px 0;
+            padding: 10px;
+            background-color: #3A3A3A;
+            border-radius: 5px;
         }
         .options {
             margin-bottom: 15px;
+            padding: 5px;
         }
         .timer {
-            font-size: 18px;
+            font-size: 24px;
             margin: 20px 0;
             text-align: center;
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border: 10px solid #4CAF50;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+        }
+        .clock-timer {
+            font-size: 30px;
+            color: #4CAF50;
         }
         .submit-btn {
             text-align: center;
@@ -62,26 +91,40 @@
             text-align: center;
             margin-bottom: 20px;
         }
+        .result {
+            text-align: center;
+        }
+        .back-btn {
+            margin-top: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
-<div class="controls">
+<div class="controls" id="quizControls">
     <label for="themeToggle">Light Theme</label>
     <input type="checkbox" id="themeToggle">
     <button class="btn" onclick="increaseFontSize()">A+</button>
     <button class="btn" onclick="decreaseFontSize()">A-</button>
+    <button class="btn" id="startQuizBtn" onclick="startQuiz()">Start Quiz</button>
 </div>
 
 <div class="quiz-container" id="quizContainer">
     <div class="quiz-info">
-        <h1>Upcoming Quiz</h1>
-        <p>Quiz 1: Scheduled for 12 October 2024 at 11:00 PM</p>
-        <button class="btn" id="startQuizBtn" onclick="startQuiz()">Start Quiz</button>
+        <h1>Select Your Quiz</h1>
+        <select id="quizSelector" onchange="fetchQuizData(this.value)">
+            <option value="1">Quiz 1</option>
+            <option value="2">Quiz 2</option>
+            <option value="3">Quiz 3</option>
+            <!-- Add more quizzes as needed -->
+        </select>
     </div>
 
     <div id="quizSection" style="display:none;">
-        <div class="timer" id="countdown"></div>
+        <div class="timer">
+            <span id="countdown" class="clock-timer"></span>
+        </div>
         <div id="questionsContainer"></div>
         <div class="submit-btn">
             <button class="btn" onclick="submitQuiz()">Submit Quiz</button>
@@ -90,7 +133,24 @@
 </div>
 
 <script>
-    // Theme and font size toggle (same as previous)
+    let timeLeft = 15 * 60; // 15 minutes in seconds
+    let countdownInterval;
+    let quizData;
+    let quizStarted = false;
+
+    // Disable all keyboard inputs
+    function disableKeys() {
+        document.addEventListener('keydown', function(event) {
+            // Disable Escape key, function keys, and Ctrl, Alt, Windows keys
+            if (event.key === 'Escape' || event.key.startsWith('F') || event.ctrlKey || event.altKey || event.metaKey) {
+                event.preventDefault();
+            }
+        });
+
+        document.addEventListener('contextmenu', (event) => event.preventDefault());
+    }
+
+    // Theme and font size toggle
     const themeToggle = document.getElementById('themeToggle');
     themeToggle.addEventListener('change', function() {
         document.body.classList.toggle('light-theme', themeToggle.checked);
@@ -104,29 +164,48 @@
         document.body.style.fontSize = 'smaller';
     }
 
-    // Fetch quiz data and store it in session storage
+    // Fetch quiz data based on selected quiz
     function fetchQuizData(quizId) {
-        const quizURL = `quiz${quizId}.json`; // Correct URL path for local server
+        const quizURL = `quiz${quizId}.json`;
         fetch(quizURL)
             .then(response => response.json())
             .then(data => {
                 sessionStorage.setItem('quizData', JSON.stringify(data));
+                quizData = data;
                 console.log('Quiz data stored in session storage');
             })
             .catch(error => console.error('Error fetching quiz data:', error));
     }
 
-    // Start quiz function
     function startQuiz() {
+        document.getElementById('quizControls').style.display = 'none';
         document.getElementById('quizSection').style.display = 'block';
-        document.getElementById('startQuizBtn').style.display = 'none';
         openFullscreen();
         displayQuiz();
         startCountdown();
-        disableFunctionKeys();
+        quizStarted = true;
+
+        // Disable all keys permanently
+        disableKeys();
     }
 
-    // Display quiz questions
+    function startCountdown() {
+        countdownInterval = setInterval(() => {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('countdown').textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+
+            const percentage = (timeLeft / (15 * 60)) * 100;
+            document.querySelector('.timer').style.border = `conic-gradient(#4CAF50 ${percentage}%, transparent ${percentage}%)`;
+
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                submitQuiz();
+            }
+            timeLeft--;
+        }, 1000);
+    }
+
     function displayQuiz() {
         const quizData = JSON.parse(sessionStorage.getItem('quizData')) || {};
         const questionsContainer = document.getElementById('questionsContainer');
@@ -152,30 +231,10 @@
         questionsContainer.innerHTML = quizHTML;
     }
 
-    // Countdown timer function
-    let timeLeft = 15 * 60; // 15 minutes in seconds
-    let countdownInterval;
-
-    function startCountdown() {
-        countdownInterval = setInterval(() => {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            document.getElementById('countdown').textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-            if (timeLeft <= 0) {
-                clearInterval(countdownInterval);
-                submitQuiz();
-            }
-            timeLeft--;
-        }, 1000);
-    }
-
-    // Submit quiz
     function submitQuiz() {
         clearInterval(countdownInterval);
-
         let score = 0;
         let totalQuestions = 0;
-        const quizData = JSON.parse(sessionStorage.getItem('quizData')) || {};
         const userAnswers = [];
 
         for (const topic in quizData) {
@@ -204,34 +263,53 @@
                 <p>Your Answer: ${answer.selected}</p>
                 <p>Correct Answer: ${answer.correct}</p><hr>`;
         });
-        resultHTML += '</div>';
+        resultHTML += '<div class="back-btn"><button class="btn" onclick="goBack()">Back to Courses</button></div>';
+        document.getElementById('quizSection').innerHTML = resultHTML;
 
-        document.getElementById('questionsContainer').innerHTML = resultHTML;
-        document.getElementById('countdown').style.display = 'none';
+        // Allow scrolling after quiz submission
+        document.body.style.overflow = 'auto';
     }
 
-    // Fullscreen mode
+    function goBack() {
+        // Reset everything to go back to the courses
+        document.getElementById('quizControls').style.display = 'block';
+        document.getElementById('quizSection').style.display = 'none';
+        timeLeft = 15 * 60; // Reset time
+        clearInterval(countdownInterval);
+        document.getElementById('countdown').textContent = '15:00';
+        document.getElementById('questionsContainer').innerHTML = '';
+        document.body.style.overflow = 'hidden'; // Disable scrolling again
+    }
+
+    // Fullscreen functions
     function openFullscreen() {
-        if (document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen();
+        const elem = document.documentElement;
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.mozRequestFullScreen) { // Firefox
+            elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { // IE/Edge
+            elem.msRequestFullscreen();
         }
     }
 
-    // Disable right-click, function keys, and special key combinations
-    function disableFunctionKeys() {
-        document.addEventListener('contextmenu', (event) => event.preventDefault());
-        document.addEventListener('keydown', (event) => {
-            // Disable function keys (F1 to F12), Ctrl, Alt, and Meta (Cmd on Mac)
-            if (event.key.startsWith('F') || event.ctrlKey || event.altKey || event.metaKey) {
-                event.preventDefault();
-            }
-        });
-    }
+    // Auto-submit quiz on tab switch
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden && quizStarted) {
+            submitQuiz();
+        }
+    });
 
-    // Initial fetch to load quiz questions into session storage before starting the quiz
-    fetchQuizData(1); // Assuming it's Quiz 1
-
+    // Disable keys on page load
+    window.onload = function() {
+        disableKeys();
+    };
 </script>
+
 
 </body>
 </html>
+
+       
