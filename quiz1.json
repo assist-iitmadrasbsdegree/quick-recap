@@ -1,0 +1,16 @@
+{
+    "Midpoint Calculation": [
+        {
+            "question": "What are the coordinates of the midpoint of points A(5, 2) and B(−3, −4)?",
+            "options": ["(1, −1)", "(-1, −1)", "(0, −0.5)", "(-4, 3)"],
+            "answer": "(1, −1)"
+        }
+    ],
+    "Ratio Calculation": [
+        {
+            "question": "In what ratio does the origin cut the line segment joining points P(4, −2) and Q(−8, 6)?",
+            "options": ["2 : 3", "3 : 4", "1 : 1", "Origin does not lie on the segment"],
+            "answer": "2 : 3"
+        }
+    ]
+}
