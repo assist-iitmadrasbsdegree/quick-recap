@@ -211,22 +211,27 @@
 
     // Fetch quiz data based on selected quiz
     function fetchQuizData(quizId) {
-        const quizURL = `quiz${quizId}.json`;
-        fetch(quizURL)
-            .then(response => response.json())
-            .then(data => {
-                sessionStorage.setItem('quizData', JSON.stringify(data));
-                quizData = data;
-                console.log('Quiz data stored in session storage');
-            })
-            .catch(error => console.error('Error fetching quiz data:', error));
-    }
+    const quizURL = `quiz${quizId}.json`;
+    fetch(quizURL)
+        .then(response => response.json())
+        .then(data => {
+            // Store quiz data with a specific key for each quiz
+            sessionStorage.setItem(`quizData_${quizId}`, JSON.stringify(data));
+            console.log(`Quiz ${quizId} data stored in session storage`);
+        })
+        .catch(error => console.error('Error fetching quiz data:', error));
+}
+
 
     function startQuiz() {
-    // Check if quiz data exists in sessionStorage
-    const quizData = sessionStorage.getItem('quizData');
+    // Get the selected quiz ID
+    const selectedQuizId = document.getElementById('quizSelector').value;
+    
+    // Retrieve the quiz data from sessionStorage
+    const quizData = sessionStorage.getItem(`quizData_${selectedQuizId}`);
+    
     if (!quizData) {
-        alert("Error: No quiz data available. Please select a quiz first.");
+        alert("Error: No quiz data available. Please select a quiz first and ensure the data is loaded.");
         return; // Stop execution if no quiz data is found
     }
 
@@ -234,11 +239,11 @@
     document.getElementById('quizControls').style.display = 'none';
     document.getElementById('quizSection').style.display = 'block';
     openFullscreen();
-    displayQuiz();
-    startCountdown();
+    displayQuiz();  // Call the function to display the quiz questions
+    startCountdown();  // Start the countdown timer
     quizStarted = true;
 
-    // Disable all keys permanently
+    // Disable all keys permanently during the quiz
     disableKeys();
 }
 
@@ -261,29 +266,31 @@
     }
 
     function displayQuiz() {
-        const quizData = JSON.parse(sessionStorage.getItem('quizData')) || {};
-        const questionsContainer = document.getElementById('questionsContainer');
-        let quizHTML = '';
+    const selectedQuizId = document.getElementById('quizSelector').value;
+    const quizData = JSON.parse(sessionStorage.getItem(`quizData_${selectedQuizId}`)) || {};
+    
+    const questionsContainer = document.getElementById('questionsContainer');
+    let quizHTML = '';
 
-        for (const topic in quizData) {
-            quizHTML += `<h2>${topic}</h2>`;
-            quizData[topic].forEach((questionObj, index) => {
-                quizHTML += `
-                    <div class="question">
-                        <div class="question-text">${questionObj.question}</div>
-                        ${questionObj.options.map((option, i) => `
-                            <div class="options">
-                                <input type="radio" name="question${index}" value="${option}" id="option${index}${i}">
-                                <label for="option${index}${i}">${option}</label>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            });
-        }
-
-        questionsContainer.innerHTML = quizHTML;
+    for (const topic in quizData) {
+        quizHTML += `<h2>${topic}</h2>`;
+        quizData[topic].forEach((questionObj, index) => {
+            quizHTML += `
+                <div class="question">
+                    <div class="question-text">${questionObj.question}</div>
+                    ${questionObj.options.map((option, i) => `
+                        <div class="options">
+                            <input type="radio" name="question${index}" value="${option}" id="option${index}${i}">
+                            <label for="option${index}${i}">${option}</label>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        });
     }
+
+    questionsContainer.innerHTML = quizHTML;
+}
 
     function submitQuiz() {
         clearInterval(countdownInterval);
