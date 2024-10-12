@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IIT Madras BS Degree Assist</title>
+    <link rel="icon" href="logo.webp" type="image/webp">
+    <meta property="og:title" content="IIT Madras BS Degree Assist">
+<meta property="og:description" content="Assist for IIT Madras BS degree aspirants">
+<meta property="og:image" content="logo.webp">
+<meta property="og:url" content="https://assist-iitmadrasbsdegree.github.io/quick-recap/index.html">
+<meta name="twitter:card" content="summary_large_image">
+
+
     <style>
         /* General Styles */
         body {
@@ -15,13 +23,15 @@
         }
 
         /* Welcome Page Styles */
-        .welcome-container {
+        .welcome-container, .about-us-container {
             height: 100vh;
-            display: flex;
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
         }
 
         h1 {
@@ -72,7 +82,7 @@
             position: relative;
         }
 
-        .menu ul li a:hover {
+        .menu ul li a:hover, .menu ul li a.active {
             color: #ffcc00;
         }
 
@@ -85,8 +95,63 @@
             transition: width 0.3s ease;
         }
 
-        .menu ul li a:hover::after {
+        .menu ul li a:hover::after, .menu ul li a.active::after {
             width: 100%;
+        }
+
+        /* About Us Section */
+        .about-us-container {
+            display: none;
+        }
+
+        .about-us-container h1 {
+            color: #ffcc00;
+        }
+
+        .about-us-container p {
+            color: #e0e0e0;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1e1e1e;
+            text-align: center;
+            padding: 20px 0;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        footer.highlight {
+            background-color: #333333; /* Highlight color when Contact is clicked */
+        }
+
+        footer .telegram-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        footer .telegram-box img {
+            width: 30px;
+            transition: transform 0.3s;
+        }
+
+        footer .telegram-box img:hover {
+            transform: rotate(360deg);
+        }
+
+        footer .telegram-box a {
+            color: #ffcc00;
+            font-size: 1.2rem;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer .telegram-box a:hover {
+            text-decoration: underline;
         }
 
         /* Animations */
@@ -111,6 +176,7 @@
                 transform: translateY(0);
             }
         }
+
     </style>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
 </head>
@@ -119,19 +185,79 @@
     <!-- Menu Bar -->
     <nav class="menu">
         <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About Us</a></li>
+            <li><a href="#home" class="menu-link" onclick="showSection('home')">Home</a></li>
+            <li><a href="#about" class="menu-link" onclick="showSection('about')">About Us</a></li>
             <li><a href="courses.html">Courses</a></li>
-           <li><a href="Assist/practassigns.html">Practice Assignments</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="Assist/practassigns.html">Practice Assignments</a></li>
+            <li><a href="#footer" class="menu-link" onclick="highlightFooter()">Contact</a></li>
         </ul>
     </nav>
 
     <!-- Welcome Section -->
-    <div class="welcome-container">
+    <div class="welcome-container section" id="home">
         <h1>Welcome Aspirants!</h1>
         <p>Your dream to study at IIT Madras is just a step away. We are here to assist you in your journey to qualify the qualifiers and succeed in the IIT Madras BS degree. Stay focused and committed, and success will follow!</p>
     </div>
+
+    <!-- About Us Section -->
+    <div class="about-us-container section" id="about">
+        <h1>About Us</h1>
+        <p>We are a dedicated team committed to helping you achieve your goal of enrolling in the prestigious IIT Madras BS Degree. Our platform provides study resources, guidance, and practice materials to help you succeed.</p>
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="telegram-box">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram Icon">
+            <a href="https://t.me/Unofficial_IIT_Madras_Bs_Degree" target="_blank">Join our Telegram Channel</a>
+        </div>
+    </footer>
+
+    <script>
+        // Function to show sections based on menu clicks
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+                section.style.opacity = '0';
+            });
+
+            // Show the selected section
+            const selectedSection = document.getElementById(sectionId);
+            selectedSection.style.display = 'flex';
+            setTimeout(() => {
+                selectedSection.style.opacity = '1';
+            }, 50);
+
+            // Highlight the active menu item
+            const menuLinks = document.querySelectorAll('.menu-link');
+            menuLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`a[href="#${sectionId}"]`).classList.add('active');
+        }
+
+        // Function to highlight the footer when Contact is clicked
+        function highlightFooter() {
+            const footer = document.getElementById('footer');
+            footer.classList.add('highlight');
+
+            // Remove active class from other menu links
+            const menuLinks = document.querySelectorAll('.menu-link');
+            menuLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Add active class to Contact link
+            document.querySelector(`a[href="#footer"]`).classList.add('active');
+        }
+
+        // Show the home section by default
+        window.onload = () => {
+            showSection('home');
+        };
+    </script>
 
 </body>
 </html>
