@@ -293,65 +293,84 @@
 }
 
     function submitQuiz() {
-        clearInterval(countdownInterval);
-        let score = 0;
-        let totalQuestions = 0;
-        const userAnswers = [];
+    clearInterval(countdownInterval);
+    let score = 0;
+    let totalQuestions = 0;
+    const userAnswers = [];
 
-        for (const topic in quizData) {
-            quizData[topic].forEach((questionObj, index) => {
-                const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
-                if (selectedOption) {
-                    userAnswers.push({
-                        question: questionObj.question,
-                        userAnswer: selectedOption.value,
-                        correctAnswer: questionObj.correctAnswer
-                    });
-                    totalQuestions++;
+    for (const topic in quizData) {
+        quizData[topic].forEach((questionObj, index) => {
+            const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+            const correctAnswer = questionObj.correctAnswer; // Correct answer from quiz data
+            
+            if (selectedOption) {
+                userAnswers.push({
+                    question: questionObj.question,
+                    userAnswer: selectedOption.value,
+                    correctAnswer: correctAnswer
+                });
+                totalQuestions++;
 
-                    // Check if the answer is correct
-                    if (selectedOption.value === questionObj.correctAnswer) {
-                        score++;
-                    }
+                // Check if the answer is correct
+                if (selectedOption.value === correctAnswer) {
+                    score++;
                 }
-            });
-        }
-
-        displayResults(userAnswers, score, totalQuestions);
+            } else {
+                // If no option is selected, push a blank user answer
+                userAnswers.push({
+                    question: questionObj.question,
+                    userAnswer: "No answer",
+                    correctAnswer: correctAnswer
+                });
+                totalQuestions++;
+            }
+        });
     }
 
+    // Save user answers to sessionStorage for later use
+    sessionStorage.setItem('userAnswers', JSON.stringify(userAnswers));
+
+    displayResults(userAnswers, score, totalQuestions);
+}
+        
+
     function displayResults(userAnswers, score, totalQuestions) {
-    const quizData = JSON.parse(sessionStorage.getItem('quizData')) || {}; // Retrieve quiz data from sessionStorage
     const resultsContainer = document.createElement('div');
     resultsContainer.classList.add('result');
 
+    // Display the score
     const resultText = document.createElement('h2');
     resultText.textContent = `You scored ${score} out of ${totalQuestions}`;
     resultsContainer.appendChild(resultText);
 
+    // Display each question, the user's answer, and the correct answer
     userAnswers.forEach((answer, index) => {
-        const topic = Object.keys(quizData)[0]; // Assuming one topic for simplicity
-        const correctAnswer = quizData[topic][index]?.correctAnswer || "N/A"; // Get the correct answer from quizData
-
         const answerText = document.createElement('p');
+        const isCorrect = answer.userAnswer === answer.correctAnswer;
+
+        // Highlight correct answers in green and incorrect in red
         answerText.innerHTML = `
-            <strong>Question:</strong> ${answer.question}<br>
-            <strong>Your Answer:</strong> ${answer.userAnswer}<br>
-            <strong>Correct Answer:</strong> ${correctAnswer}
+            <strong>Question ${index + 1}:</strong> ${answer.question}<br>
+            <strong>Your Answer:</strong> <span style="color: ${isCorrect ? 'green' : 'red'}">${answer.userAnswer}</span><br>
+            <strong>Correct Answer:</strong> <span style="color: green">${answer.correctAnswer}</span>
         `;
         resultsContainer.appendChild(answerText);
     });
 
+    // Back to courses button
     const backBtn = document.createElement('button');
     backBtn.classList.add('btn');
     backBtn.textContent = 'Back to Courses';
-    backBtn.onclick = () => location.reload();
+    backBtn.onclick = () => location.reload();  // Refresh to restart the quiz selection
     resultsContainer.appendChild(backBtn);
 
-    document.getElementById('quizContainer').innerHTML = ''; // Clear previous content
-    document.getElementById('quizContainer').appendChild(resultsContainer);
+    // Clear the quiz container and append the results
+    const quizContainer = document.getElementById('quizContainer');
+    quizContainer.innerHTML = ''; // Clear previous content
+    quizContainer.appendChild(resultsContainer);
 }
 
+    
       
     // Fullscreen function
     function openFullscreen() {
