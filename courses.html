@@ -116,6 +116,12 @@
             text-align: center;
         }
 
+        /* Error Message Styles */
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+
         /* Responsive styles */
         @media (max-width: 480px) {
             .btn {
@@ -146,12 +152,14 @@
 <div class="quiz-container" id="quizContainer">
     <div class="quiz-info">
         <h1>Select Your Quiz</h1>
-        <select id="quizSelector" onchange="fetchQuizData(this.value)">
+        <select id="quizSelector" onchange="checkQuizAssociation()">
+            <option value="">Select a quiz</option>
             <option value="1">Quiz 1</option>
             <option value="2">Quiz 2</option>
             <option value="3">Quiz 3</option>
             <!-- Add more quizzes as needed -->
         </select>
+        <div id="errorMsg" class="error" style="display:none;">Error: No quiz data associated with the selected quiz.</div>
     </div>
 
     <div id="quizSection" style="display:none;">
@@ -204,20 +212,45 @@
         document.body.style.fontSize = 'smaller';
     }
 
-    // Fetch quiz data based on selected quiz
-    function fetchQuizData(quizId) {
-        const quizURL = `quiz${quizId}.json`;
+    // Function to check if quiz data is associated with the selected quiz
+    function checkQuizAssociation() {
+        const selectedQuiz = document.getElementById('quizSelector').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (selectedQuiz === "") {
+            errorMsg.style.display = 'none';
+            return;
+        }
+
+        const quizURL = `quiz${selectedQuiz}.json`;  // Path to the quiz JSON file
         fetch(quizURL)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Quiz not found'); // If the quiz JSON does not exist, throw an error
+                }
+                return response.json();
+            })
             .then(data => {
                 sessionStorage.setItem('quizData', JSON.stringify(data));
                 quizData = data;
+                errorMsg.style.display = 'none'; // Hide error message if data is found
                 console.log('Quiz data stored in session storage');
             })
-            .catch(error => console.error('Error fetching quiz data:', error));
+            .catch(error => {
+                errorMsg.style.display = 'block'; // Show error message if no quiz is associated
+                console.error('Error fetching quiz data:', error);
+            });
     }
 
     function startQuiz() {
+        const selectedQuiz = document.getElementById('quizSelector').value;
+        const errorMsg = document.getElementById('errorMsg');
+
+        if (selectedQuiz === "" || !quizData) {
+            errorMsg.style.display = 'block';  // Show error message if no quiz is selected or data is missing
+            return;
+        }
+
         // Hide quiz controls once the quiz starts
         document.getElementById('quizControls').style.display = 'none';
         document.getElementById('quizSection').style.display = 'block';
@@ -250,36 +283,36 @@
     function displayQuiz() {
         const quizData = JSON.parse(sessionStorage.getItem('quizData')) || {};
         const questionsContainer = document.getElementById('questionsContainer');
-        let quizHTML = '';
+        questionsContainer.innerHTML = '';
 
-        for (const topic in quizData) {
-            quizHTML += `<h2>${topic}</h2>`;
-            quizData[topic].forEach((questionObj, index) => {
-                quizHTML += `
-                    <div class="question">
-                        <div class="question-text">${questionObj.question}</div>
-                        ${questionObj.options.map((option, i) => `
-                            <div class="options">
-                                <input type="radio" name="question${index}" value="${option}" id="option${index}${i}">
-                                <label for="option${index}${i}">${option}</label>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            });
-        }
-
-        questionsContainer.innerHTML = quizHTML;
+        quizData.questions.forEach((questionObj, index) => {
+            const questionDiv = document.createElement('div');
+            questionDiv.classList.add('question');
+            questionDiv.innerHTML = `
+                <h3>Question ${index + 1}: ${questionObj.question}</h3>
+                <div class="options">
+                    ${questionObj.options.map(option => `
+                        <label>
+                            <input type="radio" name="question${index}" value="${option}">
+                            ${option}
+                        </label>
+                    `).join('')}
+                </div>
+            `;
+            questionsContainer.appendChild(questionDiv);
+        });
     }
 
     function submitQuiz() {
-        clearInterval(countdownInterval);
+        clearInterval(countdownInterval); // Stop the timer
+
+        const quizData = JSON.parse(sessionStorage.getItem('quizData')) || {};
+        const userAnswers = [];
         let score = 0;
         let totalQuestions = 0;
-        const userAnswers = [];
 
-        for (const topic in quizData) {
-            quizData[topic].forEach((questionObj, index) => {
+        if (quizData.questions) {
+            quizData.questions.forEach((questionObj, index) => {
                 const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
                 if (selectedOption) {
                     userAnswers.push({
