@@ -10,7 +10,20 @@
 <meta property="og:image" content="logo.webp">
 <meta property="og:url" content="https://assist-iitmadrasbsdegree.github.io/quick-recap/index.html">
 <meta name="twitter:card" content="summary_large_image">
-
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "a2b9cd85-e8bb-410c-8d49-58b8cd33e8a1",
+      safari_web_id: "web.onesignal.auto.5c44608d-852e-4e28-9501-302895454737",
+      notifyButton: {
+        enable: true,
+      },
+    });
+  });
+</script>
+    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool'></script>
 
     <style>
         /* General Styles */
