@@ -28,11 +28,11 @@
       "question": "3. Determine the value of k if the origin divides the segment from A(1, 2) to B(7, k) in the ratio 3 : 1. The value of k is __________",
       "options": [
         "6",
-        "4",
+        "-2/3",
         "Cannot be determined",
         "8"
       ],
-      "correctAnswer": "6"
+      "correctAnswer": "-2/3"
     },
     {
       "serial": 4,
