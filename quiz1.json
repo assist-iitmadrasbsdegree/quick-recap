@@ -1,16 +1,170 @@
 {
-    "Midpoint Calculation": [
-        {
-            "question": "What are the coordinates of the midpoint of points A(5, 2) and B(−3, −4)?",
-            "options": ["(1, −1)", "(-1, −1)", "(0, −0.5)", "(-4, 3)"],
-            "correctAnswer": "(1, −1)"
-        }
-    ],
-    "Ratio Calculation": [
-        {
-            "question": "In what ratio does the origin cut the line segment joining points P(4, −2) and Q(−8, 6)?",
-            "options": ["2 : 3", "3 : 4", "1 : 1", "Origin does not lie on the segment"],
-            "correctAnswer": "2 : 3"
-        }
-    ]
+  "topic": "Midpoint Calculation and Ratio Analysis",
+  "questions": [
+    {
+      "serial": 1,
+      "question": "The coordinates of the midpoint of points A(3, 7) and B(5, −3) are __________",
+      "options": [
+        "(4, 2)",
+        "(2, 4)",
+        "(3, 4)",
+        "(3, 2)"
+      ],
+      "correctAnswer": "(4, 2)"
+    },
+    {
+      "serial": 2,
+      "question": "2. In what ratio does the origin divide the line segment joining points X(5, 10) and Y(−5, 0)? The ratio is _________",
+      "options": [
+        "1 : 1",
+        "2 : 3",
+        "0",
+        "Origin does not lie on the segment"
+      ],
+      "correctAnswer": "1 : 1"
+    },
+    {
+      "serial": 3,
+      "question": "3. Determine the value of k if the origin divides the segment from A(1, 2) to B(7, k) in the ratio 3 : 1. The value of k is __________",
+      "options": [
+        "6",
+        "4",
+        "Cannot be determined",
+        "8"
+      ],
+      "correctAnswer": "6"
+    },
+    {
+      "serial": 4,
+      "question": "4. The coordinates of the midpoint of points C(2, 4) and D(8, −2) are __________",
+      "options": [
+        "(3, 1)",
+        "(5, 2)",
+        "(4, 1)",
+        "(2, 3)"
+      ],
+      "correctAnswer": "(5, 1)"
+    },
+    {
+      "serial": 5,
+      "question": "5. If the origin divides the line segment between points E(−1, −1) and F(4, k) in a ratio of 1 : 2, what is the value of k? __________",
+      "options": [
+        "3",
+        "2",
+        "4",
+        "5"
+      ],
+      "correctAnswer": "3"
+    },
+    {
+      "serial": 6,
+      "question": "6. What are the coordinates of the midpoint between points G(6, 2) and H(−4, 6)? __________",
+      "options": [
+        "(1, 4)",
+        "(0, 4)",
+        "(−1, 4)",
+        "(2, 4)"
+      ],
+      "correctAnswer": "(1, 4)"
+    },
+    {
+      "serial": 7,
+      "question": "7. In what ratio does the origin divide the line segment joining points I(8, 2) and J(−2, −2)? The ratio is _________",
+      "options": [
+        "2 : 3",
+        "1 : 1",
+        "3 : 1",
+        "Origin does not lie on the line segment"
+      ],
+      "correctAnswer": "1 : 1"
+    },
+    {
+      "serial": 8,
+      "question": "8. If the origin divides the line segment from K(−6, 3) to L(4, k) in the ratio 1 : 4, what is the value of k? __________",
+      "options": [
+        "4",
+        "2",
+        "6",
+        "Cannot be determined"
+      ],
+      "correctAnswer": "4"
+    },
+    {
+      "serial": 9,
+      "question": "9. What are the midpoint coordinates of points M(10, −4) and N(0, 6)? __________",
+      "options": [
+        "(5, 1)",
+        "(3, 2)",
+        "(2, 0)",
+        "(5, 2)"
+      ],
+      "correctAnswer": "(5, 1)"
+    },
+    {
+      "serial": 10,
+      "question": "10. If the origin divides the segment joining points O(−4, 2) and P(3, k) in the ratio 2 : 1, find the value of k. __________",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "Cannot be determined"
+      ],
+      "correctAnswer": "4"
+    },
+    {
+      "serial": 11,
+      "question": "11. The coordinates of the midpoint of points Q(−3, 5) and R(1, −3) are __________",
+      "options": [
+        "(−1, 1)",
+        "(0, 1)",
+        "(−1, 0)",
+        "(0, 2)"
+      ],
+      "correctAnswer": "(−1, 1)"
+    },
+    {
+      "serial": 12,
+      "question": "12. The origin cuts the line segment between points S(−2, 2) and T(2, k) in a ratio of 1 : 3. What is the value of k? __________",
+      "options": [
+        "4",
+        "5",
+        "3",
+        "Cannot be determined"
+      ],
+      "correctAnswer": "4"
+    },
+    {
+      "serial": 13,
+      "question": "13. What are the coordinates of the midpoint of points U(5, 0) and V(−1, 6)? __________",
+      "options": [
+        "(2, 3)",
+        "(3, 3)",
+        "(2, 0)",
+        "(−1, 3)"
+      ],
+      "correctAnswer": "(2, 3)"
+    },
+    {
+      "serial": 14,
+      "question": "14. Determine the ratio in which the origin divides the segment joining W(7, 2) and X(−3, 4). The ratio is _________",
+      "options": [
+        "3 : 4",
+        "1 : 2",
+        "1 : 1",
+        "Origin does not lie on the segment"
+      ],
+      "correctAnswer": "1 : 1"
+    },
+    {
+      "serial": 15,
+      "question": "15. If the origin divides the line segment from Y(−5, −5) to Z(5, k) in the ratio 1 : 2, what is the value of k? __________",
+      "options": [
+        "0",
+        "−5",
+        "10",
+        "Cannot be determined"
+      ],
+      "correctAnswer": "0"
+    }
+  ]
 }
