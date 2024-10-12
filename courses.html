@@ -115,6 +115,11 @@
             margin-top: 20px;
             text-align: center;
         }
+        .selected-option {
+    background-color: #c0e4fc; /* Light blue background for selected option */
+    border: 2px solid #008cba; /* Blue border for selected option */
+}
+
 
         /* Responsive styles */
         @media (max-width: 480px) {
@@ -354,6 +359,51 @@
             elem.msRequestFullscreen();
         }
     }
+
+    function renderQuestion(question, index) {
+    const questionContainer = document.createElement('div');
+    questionContainer.classList.add('question-container');
+
+    const questionText = document.createElement('h3');
+    questionText.textContent = `${index + 1}. ${question.question}`;
+    questionContainer.appendChild(questionText);
+
+    question.options.forEach((option, optionIndex) => {
+        const optionButton = document.createElement('button');
+        optionButton.textContent = option;
+        optionButton.classList.add('option-button');
+        
+        // Check if this option was previously selected by the user
+        if (userAnswers[index] === option) {
+            optionButton.classList.add('selected-option');
+        }
+
+        // Handle option selection
+        optionButton.addEventListener('click', () => {
+            // Remove highlight from all options for this question
+            const allOptions = questionContainer.querySelectorAll('.option-button');
+            allOptions.forEach(button => button.classList.remove('selected-option'));
+            
+            // Highlight the selected option
+            optionButton.classList.add('selected-option');
+
+            // Store the user's selected answer
+            userAnswers[index] = option;
+        });
+
+        questionContainer.appendChild(optionButton);
+    });
+
+    return questionContainer;
+}
+
+    // Save user answers to session storage
+sessionStorage.setItem('userAnswers', JSON.stringify(userAnswers));
+
+// Retrieve user answers from session storage
+const savedAnswers = JSON.parse(sessionStorage.getItem('userAnswers')) || [];
+
+
 </script>
 
 </body>
