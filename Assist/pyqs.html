@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previous Year Questions (PYQ's)</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #F0F0F0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: left;
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+
+        .directory {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .subject {
+            margin-bottom: 15px;
+        }
+
+        .subject h2 {
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+            color: #4CAF50;
+            cursor: pointer;
+            margin: 0;
+            padding: 5px 0;
+        }
+
+        .subject h2:hover {
+            color: #388E3C;
+        }
+
+        .subject .files {
+            margin-top: 10px;
+            padding-left: 20px;
+            display: none; /* Initially hidden, can be toggled open */
+        }
+
+        .subject h2::before {
+            content: '\1F4C1'; /* Folder emoji to simulate directory */
+            margin-right: 10px;
+        }
+
+        .subject h2.active::before {
+            content: '\1F4C2'; /* Open folder emoji */
+        }
+
+        .files ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .files li {
+            margin: 10px 0;
+        }
+
+        .files a {
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+        }
+
+        .files a:hover {
+            text-decoration: underline;
+        }
+
+        .files .no-files {
+            color: #888;
+            font-style: italic;
+        }
+
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .subject h2 {
+                font-size: 18px;
+            }
+
+            .files li {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Previous Year Question Banks</h1>
+    <div class="directory">
+      
+
+        <!-- Mathematics Subject -->
+        <div class="subject">
+            <h2>Acess to Qualifiers PYQ's</h2>
+            <div class="files">
+                <ul>
+                    <li><a href="https://mega.nz/file/RYoBXZoR#TvD98mEYWHf1C9eqGYHn-iWXkI3BHCXGud3MDkve3tg" target="_blank">Feb 2024</a></li>
+                    <li><a href="https://mega.nz/file/UZpVTLKT#ViTg3l0WUwG7xnfDvkiMw-j2-GyzyO8iBgBt7l0PFRU" target="_blank">OCtober 2023</a></li>
+                  <li><a href="https://mega.nz/file/QFgngTha#g1qHXE4Xlk3RZDH4jGXbvOm5_Rz8ZRz_dcEcDRShEqs" target="_blank">December 2023</a></li>
+                  <li><a href="https://mega.nz/file/5JpWQRjS#OPuuaFkb3bCJFSOTdbitM59IQOtocbjJiPr2p-keZc8" target="_blank">2023 Year</a></li>
+                  <li><a href="https://mega.nz/file/tdJDjLJJ#EgJNVoxhGepm9qxm-iIRIDyCgXFm5YVvioafE2bjIVw" target="_blank">Feb 2023</a></li>
+                  <li><a href="https://mega.nz/file/RMYCgBpL#-aKKTqIJ1N48G6e5JMIHv2N7R1d8gQxmpF-aUOopvgE" target="_blank">Year 2023</a></li>
+                  <li><a href="https://mega.nz/folder/IIgkRaJA#Meg1VZba6vgEbgbMsjZgdg" target="_blank">Folder on Mega Link (Remaining Files are updated on the same)</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Toggle folder view functionality
+    const subjects = document.querySelectorAll('.subject h2');
+    
+    subjects.forEach(subject => {
+        subject.addEventListener('click', () => {
+            const files = subject.nextElementSibling;
+            subject.classList.toggle('active');
+            files.style.display = files.style.display === 'block' ? 'none' : 'block';
+        });
+    });
+</script>
+
+</body>
+</html>
