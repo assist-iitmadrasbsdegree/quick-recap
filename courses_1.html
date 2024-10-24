@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - Courses</title>
+    <style>
+        /* Styles for a better exam environment */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #FFF; /* Set background color to white */
+            color: #000; /* Set text color to black */
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Align items to the start */
+            height: 100vh;
+            overflow-y: auto; /* Allow vertical scrolling */
+        }
+
+        .quiz-container {
+            max-width: 90%;
+            width: 100%;
+            background-color: #F0F0F0; /* Light gray for the quiz container */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+
+            transition: all 0.3s ease;
+            border: 1px solid #4CAF50;
+            overflow-y: auto; /* Allow vertical scrolling */
+            max-height: 80vh; /* Prevent overflowing the viewport */
+        }
+
+        .controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .question {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #D9E8FF; /* Light blue background for questions */
+Show quoted text
+        clearInterval(countdownInterval); // Clear the countdown
+
+        const selectedQuizId = document.getElementById('quizSelector').value;
+        const quizData = JSON.parse(sessionStorage.getItem(`quizData_${selectedQuizId}`)) || {};
+        const userAnswers = {};
+        let score = 0;
+
+        // Collect user answers
+
+        for (const topic in quizData) {
+            quizData[topic].forEach((questionObj, index) => {
+                const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+                if (selectedOption) {
+                    userAnswers[`question${index}`] = selectedOption.value;
+                    if (selectedOption.value === questionObj.correctAnswer) {
+                        score++;
+                    }
+                }
+            });
+        }
+
+        // Display the result
+        document.getElementById('quizSection').style.display = 'none';
+        const resultContainer = document.createElement('div');
+        resultContainer.className = 'result';
+        resultContainer.innerHTML = `
+            <h2>Your Score: ${score} / ${Object.keys(userAnswers).length}</h2>
+            <button class="btn" onclick="retryQuiz()">Retry Quiz</button>
+            <div class="back-btn">
+                <button class="btn" onclick="goBack()">Go Back</button>
+            </div>
+        `;
+        document.querySelector('.quiz-container').appendChild(resultContainer);
+    }
+
+    function retryQuiz() {
+        location.reload(); // Reload the page to restart the quiz
+    }
+
+    function goBack() {
+        document.getElementById('quizControls').style.display = 'block';
+        document.getElementById('quizSection').style.display = 'none';
+        clearInterval(countdownInterval); // Clear the countdown
+        timeLeft = 15 * 60; // Reset time
+        document.getElementById('countdown').textContent = '15:00'; // Reset display
+        document.getElementById('questionsContainer').innerHTML = ''; // Clear questions
+    }
+
+    function openFullscreen() {
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        }
+    }
+</script>
+
+</body>
+</html>
+Show quoted text
