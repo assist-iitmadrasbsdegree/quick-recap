@@ -13,7 +13,6 @@
             padding: 20px;
             background-color: #FFF; /* Set background color to white */
             color: #000; /* Set text color to black */
-
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -29,7 +28,6 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-
             transition: all 0.3s ease;
             border: 1px solid #4CAF50;
             overflow-y: auto; /* Allow vertical scrolling */
@@ -60,16 +58,237 @@
             margin: 20px 0;
             padding: 10px;
             background-color: #D9E8FF; /* Light blue background for questions */
-Show quoted text
-        clearInterval(countdownInterval); // Clear the countdown
+            border-radius: 5px;
+        }
 
+        .options {
+            margin-bottom: 15px;
+            padding: 5px;
+        }
+
+        .timer {
+            font-size: 24px;
+            margin: 20px 0;
+            text-align: center;
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border: 10px solid #4CAF50;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+        }
+
+        .clock-timer {
+            font-size: 20px;
+            color: #4CAF50;
+        }
+
+        .submit-btn {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .quiz-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .result {
+            text-align: center;
+            margin-top: 20px; /* Space above results */
+        }
+
+        .back-btn {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .selected-option {
+            background-color: #c0e4fc; /* Light blue background for selected option */
+            border: 2px solid #008cba; /* Blue border for selected option */
+        }
+
+        /* Responsive styles */
+        @media (max-width: 480px) {
+            .btn {
+                width: 100%;
+            }
+
+            .timer {
+                width: 80px;
+                height: 80px;
+            }
+
+            .clock-timer {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="controls" id="quizControls">
+    <label for="themeToggle">Light Theme</label>
+    <input type="checkbox" id="themeToggle">
+    <button class="btn" onclick="increaseFontSize()">A+</button>
+    <button class="btn" onclick="decreaseFontSize()">A-</button>
+    <button class="btn" id="startQuizBtn" onclick="startQuiz()">Start Quiz</button>
+</div>
+
+<div class="quiz-container" id="quizContainer">
+    <div class="quiz-info">
+        <h1>Select Your Quiz</h1>
+        <select id="quizSelector" onchange="fetchQuizData(this.value)">
+            <option value="1">Quiz 1</option>
+            <option value="2">Quiz 2</option>
+            <option value="3">Quiz 3</option>
+            <option value="4">Quiz 4</option>
+            <!-- Add more quizzes as needed -->
+        </select>
+    </div>
+
+    <div id="quizSection" style="display:none;">
+        <div class="timer">
+            <span id="countdown" class="clock-timer"></span>
+        </div>
+        <div id="questionsContainer"></div>
+        <div class="submit-btn">
+            <button class="btn" onclick="submitQuiz()">Submit Quiz</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let timeLeft = 15 * 60; // 15 minutes in seconds
+    let countdownInterval;
+    let quizData;
+    let quizStarted = false;
+
+    // Disable all keyboard inputs
+    function disableKeys() {
+        document.addEventListener('keydown', function(event) {
+            // Disable Escape key, function keys, and Ctrl, Alt, Windows keys
+            if (event.key === 'Escape' || event.key.startsWith('F') || event.ctrlKey || event.altKey || event.metaKey) {
+                event.preventDefault();
+            }
+        });
+
+        document.addEventListener('contextmenu', (event) => event.preventDefault());
+    }
+
+    // Detect tab change
+    window.addEventListener("blur", function() {
+        if (quizStarted) {
+            submitQuiz();
+        }
+    });
+
+    // Theme and font size toggle
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('change', function() {
+        document.body.classList.toggle('light-theme', themeToggle.checked);
+    });
+
+    function increaseFontSize() {
+        document.body.style.fontSize = 'larger';
+    }
+
+    function decreaseFontSize() {
+        document.body.style.fontSize = 'smaller';
+    }
+
+    // Fetch quiz data based on selected quiz
+    function fetchQuizData(quizId) {
+        const quizURL = `quiz${quizId}.json`;
+        fetch(quizURL)
+            .then(response => response.json())
+            .then(data => {
+                // Store quiz data with a specific key for each quiz
+                sessionStorage.setItem(`quizData_${quizId}`, JSON.stringify(data));
+                console.log(`Quiz ${quizId} data stored in session storage`);
+            })
+            .catch(error => console.error('Error fetching quiz data:', error));
+    }
+
+    function startQuiz() {
+        // Get the selected quiz ID
+        const selectedQuizId = document.getElementById('quizSelector').value;
+       
+        // Retrieve the quiz data from sessionStorage
+        const quizData = sessionStorage.getItem(`quizData_${selectedQuizId}`);
+       
+        if (!quizData) {
+            alert("Error: No quiz data available. Please select a quiz first and ensure the data is loaded.");
+            return; // Stop execution if no quiz data is found
+        }
+
+        // Hide quiz controls once the quiz starts
+        document.getElementById('quizControls').style.display = 'none';
+        document.getElementById('quizSection').style.display = 'block';
+        openFullscreen();
+        displayQuiz();  // Call the function to display the quiz questions
+        startCountdown();  // Start the countdown timer
+        quizStarted = true;
+
+        // Disable all keys permanently during the quiz
+        disableKeys();
+    }
+
+    function startCountdown() {
+        countdownInterval = setInterval(() => {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('countdown').textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+
+            const percentage = (timeLeft / (15 * 60)) * 100;
+            document.querySelector('.timer').style.border = `conic-gradient(#4CAF50 ${percentage}%, transparent ${percentage}%)`;
+
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                submitQuiz();
+            }
+            timeLeft--;
+        }, 1000);
+    }
+
+    function displayQuiz() {
+        const selectedQuizId = document.getElementById('quizSelector').value;
+        const quizData = JSON.parse(sessionStorage.getItem(`quizData_${selectedQuizId}`)) || {};
+       
+        const questionsContainer = document.getElementById('questionsContainer');
+        let quizHTML = '';
+
+        for (const topic in quizData) {
+            quizHTML += `<h2>${topic}</h2>`;
+            quizData[topic].forEach((questionObj, index) => {
+                quizHTML += `
+                    <div class="question">
+                        <div class="question-text">${questionObj.question}</div>
+                        ${questionObj.options.map((option, i) => `
+                            <div class="options">
+                                <input type="radio" name="question${index}" value="${option}" id="option${index}${i}">
+                                <label for="option${index}${i}">${option}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            });
+        }
+
+        questionsContainer.innerHTML = quizHTML;
+    }
+
+    function submitQuiz() {
+        clearInterval(countdownInterval); // Clear the countdown
         const selectedQuizId = document.getElementById('quizSelector').value;
         const quizData = JSON.parse(sessionStorage.getItem(`quizData_${selectedQuizId}`)) || {};
         const userAnswers = {};
         let score = 0;
 
         // Collect user answers
-
         for (const topic in quizData) {
             quizData[topic].forEach((questionObj, index) => {
                 const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
