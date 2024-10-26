@@ -419,8 +419,190 @@
       ],
       "correctAnswer": "x = 1",
       "explanation": "The axis of symmetry is x = -b/(2a), which simplifies to x = 1."
+    },
+    {
+      "serial": 36,
+      "question": "For the function f(x) = -x² + 6x - 8, what is the maximum value?",
+      "options": [
+        "7",
+        "8",
+        "10",
+        "9"
+      ],
+      "correctAnswer": "10",
+      "explanation": "Since the parabola opens downward, the maximum occurs at the vertex. Completing the square or using x = -b/(2a) gives f(3) = 10."
+    },
+    {
+      "serial": 37,
+      "question": "Which of the following functions has a minimum point?",
+      "options": [
+        "y = -3x² + 4x - 2",
+        "y = -2x² - 4x + 6",
+        "y = 5x² - x + 3",
+        "y = -x² + 7x - 5"
+      ],
+      "correctAnswer": "y = 5x² - x + 3",
+      "explanation": "Positive leading coefficient indicates the parabola opens upwards, having a minimum point."
+    },
+    {
+      "serial": 38,
+      "question": "Solve x² + 4x - 21 = 0 by factoring.",
+      "options": [
+        "x = -7, x = 3",
+        "x = 7, x = -3",
+        "x = -3, x = 7",
+        "x = 3, x = -7"
+      ],
+      "correctAnswer": "x = -7, x = 3",
+      "explanation": "The equation factors as (x + 7)(x - 3) = 0, so x = -7, 3."
+    },
+    {
+      "serial": 39,
+      "question": "What is the range of the function f(x) = -2x² + 8x - 6?",
+      "options": [
+        "All real numbers",
+        "y ≤ 2",
+        "y ≥ -6",
+        "y ≤ 2"
+      ],
+      "correctAnswer": "y ≤ 2",
+      "explanation": "The parabola opens downwards, so its range is restricted to values below or equal to the maximum at y = 2."
+    },
+    {
+      "serial": 40,
+      "question": "What is the axis of symmetry for the function y = -3x² + 12x + 7?",
+      "options": [
+        "x = -2",
+        "x = 2",
+        "x = 4",
+        "x = -4"
+      ],
+      "correctAnswer": "x = 2",
+      "explanation": "Using x = -b/(2a), where a = -3 and b = 12, we get x = 2."
+    },
+    {
+      "serial": 41,
+      "question": "Which method is most suitable for solving x² - 5x + 6 = 0?",
+      "options": [
+        "Factoring",
+        "Completing the square",
+        "Quadratic formula",
+        "Graphing"
+      ],
+      "correctAnswer": "Factoring",
+      "explanation": "The expression can be easily factored as (x - 3)(x - 2) = 0."
+    },
+    {
+      "serial": 42,
+      "question": "For what values of k does the quadratic equation x² + kx + 16 = 0 have no real roots?",
+      "options": [
+        "k > 8",
+        "k < -8",
+        "|k| < 8",
+        "|k| > 8"
+      ],
+      "correctAnswer": "|k| < 8",
+      "explanation": "The discriminant b² - 4ac < 0 for no real roots, so k² < 64, hence |k| < 8."
+    },
+    {
+      "serial": 43,
+      "question": "The graph of y = 2x² + 12x + 19 opens:",
+      "options": [
+        "Downwards",
+        "Upwards",
+        "Sideways",
+        "Horizontally"
+      ],
+      "correctAnswer": "Upwards",
+      "explanation": "The coefficient of x² is positive (2), so the parabola opens upwards."
+    },
+    {
+      "serial": 44,
+      "question": "If f(x) = -3x² + 6x + 5, what is the axis of symmetry?",
+      "options": [
+        "x = 2",
+        "x = 1",
+        "x = -1",
+        "x = -2"
+      ],
+      "correctAnswer": "x = 1",
+      "explanation": "Using x = -b/(2a) where a = -3 and b = 6, we get x = 1."
+    },
+    {
+      "serial": 45,
+      "question": "Which of the following quadratic equations has real, distinct roots?",
+      "options": [
+        "x² + 2x + 5 = 0",
+        "x² - 4x + 4 = 0",
+        "x² - 5x + 6 = 0",
+        "x² + 4x + 8 = 0"
+      ],
+      "correctAnswer": "x² - 5x + 6 = 0",
+      "explanation": "Only this equation has a positive discriminant, indicating distinct real roots."
+    },
+    {
+      "serial": 46,
+      "question": "What is the sum of the roots of the equation x² - 7x + 10 = 0?",
+      "options": [
+        "-7",
+        "7",
+        "10",
+        "-10"
+      ],
+      "correctAnswer": "7",
+      "explanation": "Sum of roots = -b/a = 7."
+    },
+    {
+      "serial": 47,
+      "question": "If x = 3 is a solution to the equation x² - 6x + k = 0, what is the value of k?",
+      "options": [
+        "9",
+        "6",
+        "12",
+        "3"
+      ],
+      "correctAnswer": "9",
+      "explanation": "Substitute x = 3 into the equation to get k = 9."
+    },
+    {
+      "serial": 48,
+      "question": "Which of the following parabolas has a maximum value?",
+      "options": [
+        "y = 3x² - 4x + 5",
+        "y = -2x² + 5x - 3",
+        "y = x² + 6x + 1",
+        "y = 4x² - x + 2"
+      ],
+      "correctAnswer": "y = -2x² + 5x - 3",
+      "explanation": "The negative leading coefficient (-2) indicates the parabola opens downwards, with a maximum."
+    },
+    {
+      "serial": 49,
+      "question": "For what values of x is y = x² - 2x + 1 equal to zero?",
+      "options": [
+        "x = -1",
+        "x = 1",
+        "x = 0",
+        "x = 2"
+      ],
+      "correctAnswer": "x = 1",
+      "explanation": "Factoring gives (x - 1)² = 0, so x = 1."
+    },
+    {
+      "serial": 50,
+      "question": "Solve the quadratic equation x² + 10x + 25 = 0.",
+      "options": [
+        "x = -5",
+        "x = 5",
+        "x = -10",
+        "x = 10"
+      ],
+      "correctAnswer": "x = -5",
+      "explanation": "The equation factors as (x + 5)² = 0, so x = -5."
     }
   ]
 }
+  
+
 
 
