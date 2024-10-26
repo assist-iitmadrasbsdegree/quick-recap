@@ -378,8 +378,7 @@ function displayResults(userAnswers, score, totalQuestions) {
         <strong>Question ${index + 1}:</strong> ${answer.question}<br>
         <strong>Your Answer:</strong> ${answer.userAnswer}<br>
         <strong>Correct Answer:</strong> ${answer.correctAnswer}<br>
-        <strong>Explanation:</strong> ${answer.explanation || 'No explanation available.'}
-    `;
+        <strong>Explanation:</strong> ${answer.explanation || 'N/A'}  <!-- Display N/A if explanation is empty -->    `;
     resultsContainer.appendChild(answerText);
 });
 
