@@ -156,16 +156,19 @@
 
 <div class="quiz-container" id="quizContainer">
     <div class="quiz-info">
-        <h1>Select Your Quiz</h1>
+        <h1>Please Select a Quiz from the Options Below</h1>
+        <p>Choose a quiz to get started and test your knowledge:</p>
         <select id="quizSelector" onchange="fetchQuizData(this.value)">
+            <option value="" disabled selected>Select Quiz</option>
             <option value="1">Quiz 1</option>
             <option value="2">Quiz 2</option>
             <option value="3">Quiz 3</option>
-              <option value="4">Quiz 4</option>
-            
+            <option value="4">Quiz 4</option>
             <!-- Add more quizzes as needed -->
         </select>
     </div>
+</div>
+
 
     <div id="quizSection" style="display:none;">
         <div class="timer">
