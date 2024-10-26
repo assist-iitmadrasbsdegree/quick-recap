@@ -164,6 +164,10 @@
             <option value="2">Quiz 2</option>
             <option value="3">Quiz 3</option>
             <option value="4">Quiz 4</option>
+            <option value="5">Quiz 5</option>
+            <option value="6">Quiz 6</option>
+            <option value="7">Quiz 7</option>
+            
             <!-- Add more quizzes as needed -->
         </select>
     </div>
@@ -234,30 +238,44 @@
 }
 
 
-    function startQuiz() {
+    // startQuiz function with dynamic time for each quiz
+function startQuiz() {
     // Get the selected quiz ID
     const selectedQuizId = document.getElementById('quizSelector').value;
     
+    // Set timeLeft based on selected quiz
+    switch (selectedQuizId) {
+        case '1':
+        case '2':
+            timeLeft = 30 * 60; // 30 minutes in seconds for Quiz 1 and Quiz 2
+            break;
+        case '3':
+        case '4':
+            timeLeft = 15 * 60; // 15 minutes in seconds for Quiz 3 and Quiz 4
+            break;
+        default:
+            timeLeft = 15 * 60; // Default to 15 minutes if no quiz is selected
+    }
+
     // Retrieve the quiz data from sessionStorage
     const quizData = sessionStorage.getItem(`quizData_${selectedQuizId}`);
     
     if (!quizData) {
         alert("Error: No quiz data available. Please select a quiz first and ensure the data is loaded.");
-        return; // Stop execution if no quiz data is found
+        return;
     }
 
     // Hide quiz controls once the quiz starts
     document.getElementById('quizControls').style.display = 'none';
     document.getElementById('quizSection').style.display = 'block';
     openFullscreen();
-    displayQuiz();  // Call the function to display the quiz questions
-    startCountdown();  // Start the countdown timer
+    displayQuiz(); // Display the quiz questions
+    startCountdown(); // Start the countdown timer
     quizStarted = true;
 
     // Disable all keys permanently during the quiz
     disableKeys();
 }
-
 
     function startCountdown() {
         countdownInterval = setInterval(() => {
