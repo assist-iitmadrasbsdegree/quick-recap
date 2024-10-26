@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,27 +10,38 @@
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #FFF; /* Set background color to white */
-            color: #000; /* Set text color to black */
+            background-color: #1E1E1E;
+            color: #FFF;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* Align items to the start */
+            justify-content: flex-start;
             height: 100vh;
-            overflow-y: auto; /* Allow vertical scrolling */
+            overflow-y: auto;
+        }
+
+        .light-theme {
+            background-color: #FFF;
+            color: #000;
         }
 
         .quiz-container {
             max-width: 90%;
             width: 100%;
-            background-color: #F0F0F0; /* Light gray for the quiz container */
+            background-color: #2C2C2C;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
             transition: all 0.3s ease;
             border: 1px solid #4CAF50;
-            overflow-y: auto; /* Allow vertical scrolling */
-            max-height: 80vh; /* Prevent overflowing the viewport */
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+
+        .light-theme .quiz-container {
+            background-color: #F0F0F0;
+            color: #000;
+            border: 1px solid #4CAF50;
         }
 
         .controls {
@@ -54,11 +64,17 @@
             background-color: #45a049;
         }
 
+        /* Dark Theme for Question */
         .question {
             margin: 20px 0;
             padding: 10px;
-            background-color: #D9E8FF; /* Light blue background for questions */
+            background-color: #3A3A3A; /* Dark theme color */
             border-radius: 5px;
+        }
+
+        /* Light Theme for Question */
+        .light-theme .question {
+            background-color: #87CEEB; /* Sky blue for light theme */
         }
 
         .options {
@@ -98,7 +114,7 @@
 
         .result {
             text-align: center;
-            margin-top: 20px; /* Space above results */
+            margin-top: 20px;
         }
 
         .back-btn {
@@ -107,8 +123,37 @@
         }
 
         .selected-option {
-            background-color: #c0e4fc; /* Light blue background for selected option */
-            border: 2px solid #008cba; /* Blue border for selected option */
+            background-color: #c0e4fc;
+            border: 2px solid #008cba;
+        }
+
+        /* Sand clock styles */
+        .sand-clock {
+            position: relative;
+            width: 50px;
+            height: 100px;
+            margin: 20px auto;
+            overflow: hidden;
+            background-color: #FFD700; /* Gold color */
+            border-radius: 10px;
+        }
+
+        .sand {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, #C2B280 0%, transparent 100%);
+            animation: pour 15m linear forwards; /* Adjust animation duration according to the quiz duration */
+        }
+
+        @keyframes pour {
+            from {
+                height: 0;
+            }
+            to {
+                height: 100%;
+            }
         }
 
         /* Responsive styles */
@@ -140,24 +185,31 @@
 
 <div class="quiz-container" id="quizContainer">
     <div class="quiz-info">
-        <h1>Select Your Quiz</h1>
+        <h1>Please Select a Quiz from the Options Below</h1>
+        <p>Choose a quiz to get started and test your knowledge:</p>
         <select id="quizSelector" onchange="fetchQuizData(this.value)">
+            <option value="" disabled selected>Select Quiz</option>
             <option value="1">Quiz 1</option>
             <option value="2">Quiz 2</option>
             <option value="3">Quiz 3</option>
             <option value="4">Quiz 4</option>
-            <!-- Add more quizzes as needed -->
+            <option value="5">Quiz 5</option>
+            <option value="6">Quiz 6</option>
+            <option value="7">Quiz 7</option>
         </select>
     </div>
+</div>
 
-    <div id="quizSection" style="display:none;">
-        <div class="timer">
-            <span id="countdown" class="clock-timer"></span>
-        </div>
-        <div id="questionsContainer"></div>
-        <div class="submit-btn">
-            <button class="btn" onclick="submitQuiz()">Submit Quiz</button>
-        </div>
+<div id="quizSection" style="display:none;">
+    <div class="timer">
+        <span id="countdown" class="clock-timer"></span>
+    </div>
+    <div id="questionsContainer"></div>
+    <div class="sand-clock" id="sandClock" style="display: none;">
+        <div class="sand"></div>
+    </div>
+    <div class="submit-btn">
+        <button class="btn" onclick="submitQuiz()">Submit Quiz</button>
     </div>
 </div>
 
@@ -213,38 +265,44 @@
             .catch(error => console.error('Error fetching quiz data:', error));
     }
 
+    // startQuiz function with dynamic time for each quiz
     function startQuiz() {
         // Get the selected quiz ID
         const selectedQuizId = document.getElementById('quizSelector').value;
-       
-        // Retrieve the quiz data from sessionStorage
-        const quizData = sessionStorage.getItem(`quizData_${selectedQuizId}`);
-       
-        if (!quizData) {
-            alert("Error: No quiz data available. Please select a quiz first and ensure the data is loaded.");
-            return; // Stop execution if no quiz data is found
+
+        // Set timeLeft based on selected quiz
+        switch (selectedQuizId) {
+            case '1':
+            case '2':
+                timeLeft = 30 * 60; // 30 minutes in seconds for Quiz 1 and Quiz 2
+                break;
+            case '3':
+            case '4':
+                timeLeft = 15 * 60; // 15 minutes in seconds for Quiz 3 and Quiz 4
+                break;
+            default:
+                timeLeft = 15 * 60; // Default time for others
         }
 
-        // Hide quiz controls once the quiz starts
+        // Show the quiz section and hide the controls
         document.getElementById('quizControls').style.display = 'none';
         document.getElementById('quizSection').style.display = 'block';
-        openFullscreen();
-        displayQuiz();  // Call the function to display the quiz questions
-        startCountdown();  // Start the countdown timer
-        quizStarted = true;
+        document.getElementById('sandClock').style.display = 'block'; // Show sand clock
 
-        // Disable all keys permanently during the quiz
+        // Start countdown and fetch quiz data
+        startCountdown();
+        fetchQuizData(selectedQuizId);
+        quizStarted = true;
         disableKeys();
     }
 
+    // Countdown timer
     function startCountdown() {
+        const quizDuration = timeLeft; // Use the set duration based on quiz
         countdownInterval = setInterval(() => {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
             document.getElementById('countdown').textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-
-            const percentage = (timeLeft / (15 * 60)) * 100;
-            document.querySelector('.timer').style.border = `conic-gradient(#4CAF50 ${percentage}%, transparent ${percentage}%)`;
 
             if (timeLeft <= 0) {
                 clearInterval(countdownInterval);
@@ -254,86 +312,16 @@
         }, 1000);
     }
 
-    function displayQuiz() {
-        const selectedQuizId = document.getElementById('quizSelector').value;
-        const quizData = JSON.parse(sessionStorage.getItem(`quizData_${selectedQuizId}`)) || {};
-       
-        const questionsContainer = document.getElementById('questionsContainer');
-        let quizHTML = '';
-
-        for (const topic in quizData) {
-            quizHTML += `<h2>${topic}</h2>`;
-            quizData[topic].forEach((questionObj, index) => {
-                quizHTML += `
-                    <div class="question">
-                        <div class="question-text">${questionObj.question}</div>
-                        ${questionObj.options.map((option, i) => `
-                            <div class="options">
-                                <input type="radio" name="question${index}" value="${option}" id="option${index}${i}">
-                                <label for="option${index}${i}">${option}</label>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            });
-        }
-
-        questionsContainer.innerHTML = quizHTML;
-    }
-
+    // Function to submit quiz
     function submitQuiz() {
-        clearInterval(countdownInterval); // Clear the countdown
-        const selectedQuizId = document.getElementById('quizSelector').value;
-        const quizData = JSON.parse(sessionStorage.getItem(`quizData_${selectedQuizId}`)) || {};
-        const userAnswers = {};
-        let score = 0;
-
-        // Collect user answers
-        for (const topic in quizData) {
-            quizData[topic].forEach((questionObj, index) => {
-                const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
-                if (selectedOption) {
-                    userAnswers[`question${index}`] = selectedOption.value;
-                    if (selectedOption.value === questionObj.correctAnswer) {
-                        score++;
-                    }
-                }
-            });
-        }
-
-        // Display the result
-        document.getElementById('quizSection').style.display = 'none';
-        const resultContainer = document.createElement('div');
-        resultContainer.className = 'result';
-        resultContainer.innerHTML = `
-            <h2>Your Score: ${score} / ${Object.keys(userAnswers).length}</h2>
-            <button class="btn" onclick="retryQuiz()">Retry Quiz</button>
-            <div class="back-btn">
-                <button class="btn" onclick="goBack()">Go Back</button>
-            </div>
-        `;
-        document.querySelector('.quiz-container').appendChild(resultContainer);
-    }
-
-    function retryQuiz() {
-        location.reload(); // Reload the page to restart the quiz
-    }
-
-    function goBack() {
-        document.getElementById('quizControls').style.display = 'block';
-        document.getElementById('quizSection').style.display = 'none';
-        clearInterval(countdownInterval); // Clear the countdown
-        timeLeft = 15 * 60; // Reset time
-        document.getElementById('countdown').textContent = '15:00'; // Reset display
-        document.getElementById('questionsContainer').innerHTML = ''; // Clear questions
-    }
-
-    function openFullscreen() {
-        if (document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen();
-        }
+        clearInterval(countdownInterval);
+        alert("Quiz submitted!");
+        // Close sand clock and clean up
+        document.getElementById('sandClock').style.display = 'none'; // Hide sand clock
+        document.getElementById('quizSection').style.display = 'none'; // Hide quiz section
+        document.getElementById('quizControls').style.display = 'block'; // Show controls again
+        quizStarted = false;
     }
 </script>
-
 </body>
 </html>
