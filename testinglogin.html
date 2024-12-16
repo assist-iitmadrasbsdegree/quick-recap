@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Library Login</title>
+    <script src="https://www.gstatic.com/firebasejs/9.16.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.16.0/firebase-auth.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #fff;
+        }
+        .login-container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1.5s ease;
+        }
+        .login-container h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .login-container p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Welcome to E-Library</h1>
+        <p>Login to access the world of books.</p>
+        <button id="login-button">Login with Google</button>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyD2UawbUSvZgheQ89kQT9FvL-UZfu1UxZo",
+            authDomain: "asep-project-f4b23.firebaseapp.com",
+            projectId: "asep-project-f4b23",
+            storageBucket: "asep-project-f4b23.appspot.com",
+            messagingSenderId: "404098472129",
+            appId: "1:404098472129:web:2eaa5d9240f8d732d59c40",
+            measurementId: "G-580RFQEW5V"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        const loginButton = document.getElementById('login-button');
+
+        loginButton.addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithRedirect(provider);
+        });
+
+        firebase.auth().getRedirectResult().then((result) => {
+            if (result.user) {
+                alert(`Welcome ${result.user.displayName}! You are now logged in.`);
+                // Redirect to library or dashboard page here
+            }
+        }).catch((error) => {
+            console.error('Login failed:', error);
+        });
+    </script>
+</body>
+</html>
